@@ -88,16 +88,26 @@ def visualizza_dati():
 
         # Mostriamo i dati filtrati
         if not df_spese.empty:
-            st.write("### Spese")
-            st.dataframe(df_spese)
+            for i, row in df_spese.iterrows():
+                col1, col2, col3, col4, col5 = st.columns([2, 2, 2, 2, 1])
+                col1.write(row["Data"])
+                col2.write(row["Categoria"])
+                col3.write(row["Fornitore"])
+                col4.write(f"{row['Importo']:.2f} €")
 
-            # Calcoliamo e mostriamo il totale delle spese
+                if col5.button("❌", key=f"del_spesa_{i}"):
+                    st.session_state.spese_data.pop(i)
+                    salva_su_excel()
+                    st.rerun()  # Ricarica la pagina per aggiornare la visualizzazione
+
             totale_spese = df_spese["Importo"].sum()
-            st.write(f"**Totale Spese: € {totale_spese:.2f}**")
+            st.write(f"### Totale spese per {selected_fornitore}: {totale_spese:.2f} €")
         else:
             st.write("Nessuna spesa trovata per il periodo selezionato.")
+
     else:
         st.write("Nessuna spesa disponibile.")
+        
 
     # === 📌 VISUALIZZAZIONE INCASSI ===
     if st.session_state.incassi_data:
