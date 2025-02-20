@@ -123,16 +123,22 @@ def visualizza_dati():
         df_incassi["Totale"] = df_incassi["Contanti"] + df_incassi["POS"]
 
         if not df_incassi.empty:
-            st.write("### Incassi")
-            st.dataframe(df_incassi)
+            for i, row in df_incassi.iterrows():
+                col1, col2, col3, col4 = st.columns([2, 2, 2, 1])
+                col1.write(row["Data"])
+                col2.write(f"Contanti: {row['Contanti']:.2f} €")
+                col3.write(f"POS: {row['POS']:.2f} €")
 
-            # Calcoliamo e mostriamo il totale degli incassi
-            totale_incassi = df_incassi["Totale"].sum()
-            st.write(f"**Totale Incassi: € {totale_incassi:.2f}**")
+                if col4.button("❌", key=f"del_incasso_{i}"):
+                    st.session_state.incassi_data.pop(i)
+                    salva_su_excel()
+                    st.rerun()
         else:
-            st.write("Nessun incasso trovato per il periodo selezionato.")
+            st.write("Nessun incasso trovato.")
+
     else:
         st.write("Nessun incasso disponibile.")
+        
 
 # Funzione per visualizzare il grafico del Food Cost e del Guadagno
 
