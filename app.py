@@ -133,8 +133,12 @@ def visualizza_dati():
                     st.session_state.incassi_data.pop(i)
                     salva_su_excel()
                     st.rerun()
+
+                    # Calcoliamo e mostriamo il totale degli incassi
+            totale_incassi = df_incassi["Totale"].sum()
+            st.write(f"**Totale Incassi: € {totale_incassi:.2f}**")
         else:
-            st.write("Nessun incasso trovato.")
+            st.write("Nessun incasso trovato per il periodo selezionato.")
 
     else:
         st.write("Nessun incasso disponibile.")
